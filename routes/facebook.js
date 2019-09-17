@@ -7,6 +7,9 @@ FB.options({version: 'v4.0'});
 var fbApp = FB.extend({appId: app_id, appSecret: app_secret});
 var accessToken ='';
 
+const download = require('image-downloader');
+const request = require('request');
+
 
 
 /* GET users listing. */
@@ -36,6 +39,30 @@ router.get('/login', function(req, res, next) {
         /*FB.api('me', { fields: ['id', 'name'], access_token: accessToken }, function (res) {
             console.log(res);
         });*/
+
+        let dataAry = [];
+        request('https://graph.facebook.com/v3.2/{facebook_page_id}?fields=posts.limit(100){full_picture}&access_token={your_access_token}', function (error, response, body) {
+                console.log('error:', error);
+                console.log('statusCode:', response && response.statusCode);
+                let datas = JSON.parse(body).posts.data;
+                 datas.forEach((data)=>{
+                        dataAry.push(data.full_picture);
+                })
+                for(let i = 0; i < dataAry.length; i++){
+                    let options = {
+                        url: dataAry[i],
+                        dest: '{dest_path}' 
+                        // Where you want to save
+                    }
+                    download.image(options)
+                        .then(({ filename, image }) => {
+                            console.log('File saved to', filename);
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                        })
+                }
+        });
         
         
     
