@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const app_secret ='7c337e6e6be6db197ff102d47d8d3a60';
-const app_id = '167730780420626';
+const app_secret ='b8603c06ccc1e52ea2df37c850d26662';
+const app_id = '325195180896395';
 var FB = require('fb');
 FB.options({version: 'v4.0'});
 var fbApp = FB.extend({appId: app_id, appSecret: app_secret});
@@ -19,7 +19,7 @@ router.get('/login', function(req, res, next) {
         client_id: app_id,
         client_secret: app_secret,
         grant_type: 'client_credentials',
-        redirect_uri: 'http://localhost:3000/fb/users',
+        redirect_uri: 'http://botmela.samuraigeeks.net/fb/users',
         //code: 'code'
     }, function (res) {
         if(!res || res.error) {
