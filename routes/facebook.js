@@ -66,7 +66,7 @@ function (token, refreshToken, profile, done) {
             //"email":    (profile.emails[0].value || '').toLowerCase(),
             "token":    token
         };
-        router.use(session({access_token: token}));
+        app.use(session(newUser));
         users.push(newUser);
         console.log(users);
         return done(null, newUser);
@@ -113,7 +113,7 @@ router.get("/auth/facebook/callback",
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
    
-    var accessToken = req.session.access_token;
+    var accessToken = req.session.token;
 
     // console.log (" content users : " + users);
    // var user = findUser(req.user.id);
