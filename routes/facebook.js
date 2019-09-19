@@ -66,7 +66,7 @@ function (token, refreshToken, profile, done) {
             //"email":    (profile.emails[0].value || '').toLowerCase(),
             "token":    token
         };
-        app.use(session({access_token: token}));
+        router.use(session({access_token: token}));
         users.push(newUser);
         console.log(users);
         return done(null, newUser);
@@ -117,7 +117,7 @@ router.get("/content", isLoggedIn, function (req, res) {
 
     // console.log (" content users : " + users);
    // var user = findUser(req.user.id);
-    //console.log (" content users : " + user);
+    console.log (" Token  : " );
     console.log(util.inspect(accessToken, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
