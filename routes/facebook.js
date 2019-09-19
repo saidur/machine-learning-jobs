@@ -1,102 +1,130 @@
-var express = require('express');
+var express             = require('express'),
+    app                 = express(),
+    passport            = require('passport'),
+    FacebookStrategy    = require('passport-facebook').Strategy,
+    session             = require('express-session');
+
 var router = express.Router();
-const app_secret ='b8603c06ccc1e52ea2df37c850d26662';
-const app_id = '325195180896395';
-var FB = require('fb');
-FB.options({version: 'v4.0'});
-var fbApp = FB.extend({appId: app_id, appSecret: app_secret});
-var accessToken ='';
-
-const download = require('image-downloader');
-const request = require('request');
-
-
-
-/* GET users listing. */
-router.get('/login', function(req, res, next) {
-    //res.send('respond with a resource');
-    
-    
-    
-    FB.api('oauth/access_token', {
-        client_id: app_id,
-        client_secret: app_secret,
-        grant_type: 'client_credentials',
-        redirect_uri: 'http://botmela.samuraigeeks.net/fb/users',
-        //code: 'code'
-    }, function (res) {
-        if(!res || res.error) {
-            console.log(!res ? 'error occurred' : res.error);
-            return;
-        }
-     
-         accessToken = res.access_token;
-
-        console.log ('Access Token : ' + accessToken);
-        FB.setAccessToken(accessToken);
-        var expires = res.expires ? res.expires : 0;
-        console.log ("expires : " + expires);
-        /*FB.api('me', { fields: ['id', 'name'], access_token: accessToken }, function (res) {
-            console.log(res);
-        });*/
-
-        let dataAry = [];
-        request('https://graph.facebook.com/v3.2/{facebook_page_id}?fields=posts.limit(100){full_picture}&access_token={your_access_token}', function (error, response, body) {
-                console.log('error:', error);
-                console.log('statusCode:', response && response.statusCode);
-                let datas = JSON.parse(body).posts.data;
-                 datas.forEach((data)=>{
-                        dataAry.push(data.full_picture);
-                })
-                for(let i = 0; i < dataAry.length; i++){
-                    let options = {
-                        url: dataAry[i],
-                        dest: '{dest_path}' 
-                        // Where you want to save
-                    }
-                    download.image(options)
-                        .then(({ filename, image }) => {
-                            console.log('File saved to', filename);
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                        })
-                }
-        });
-        
-        
-    
-    });
-    
-    
-    
-    
-    /*FB.api('4', function (res) {
-        if(!res || res.error) {
-         console.log(!res ? 'error occurred' : res.error);
-         return;
-        }
-        console.log(res.id);
-        console.log(res.name);
-      });*/
  
 
+    /*var facebookAuth = {
+        'clientID'        : '313227515533228', // facebook App ID
+        'clientSecret'    : 'e5e96c56b76d4254ebc5878d57c6e8da', // facebook App Secret
+        'callbackURL'     : 'http://localhost:8000/fb/facebook/callback'
+    };*/
+
+    var facebookAuth = {
+        'clientID'        : '325195180896395', // facebook App ID
+        'clientSecret'    : 'b8603c06ccc1e52ea2df37c850d26662', // facebook App Secret
+        'callbackURL'     : 'https://botmela.samuraigeeks.net:9443/fb/auth/facebook/callback'
+    };
+
+
+    // hardcoded users, ideally the users should be stored in a database
+    var users = [
+    {"id":111, "username":"amy", "password":"amyspassword"},
+    { 
+        "id" : "222",
+        "email" : "test@test.com", 
+        "name" : "Ben", 
+        "token" : "DeSag3sEgaEGaYRNKlQp05@diorw"}
+    ];
+
+    function findUser(id) {
+        for(var i=0; i<users.length; i++) {
+            if(id === users[i].id) {
+                return users[i]
+            }
+        }
+        return null;
+    }
+
+    // passport needs ability to serialize and unserialize users out of session
+passport.serializeUser(function (user, done) {
+    done(null, users[0].id);
+});
+passport.deserializeUser(function (id, done) {
+    done(null, users[0]);
+});
+  
+// passport facebook strategy
+passport.use(new FacebookStrategy({
+    "clientID"        : facebookAuth.clientID,
+    "clientSecret"    : facebookAuth.clientSecret,
+    "callbackURL"     : facebookAuth.callbackURL
+},
+function (token, refreshToken, profile, done) {
+    var user = findUser(profile.id);
+    if (user) {
+        console.log(users);
+        return done(null, user);
+    } else {
+        var newUser = {
+            "id":       profile.id,
+            "name":     profile.name.givenName + ' ' + profile.name.familyName,
+            //"email":    (profile.emails[0].value || '').toLowerCase(),
+            "token":    token
+        };
+        users.push(newUser);
+        console.log(users);
+        return done(null, newUser);
+    }
+}));
+ 
+ 
+// initialize passposrt and and session for persistent login sessions
+router.use(session({
+    secret: "tHiSiSasEcRetStr",
+    resave: true,
+    saveUninitialized: true }));
+router.use(passport.initialize());
+router.use(passport.session());
+ 
+ 
+// route middleware to ensure user is logged in, if it's not send 401 status
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+ 
+    res.sendStatus(401);
+}
+
+
+// home page
+router.get("/", function (req, res) {
+    res.send("Hello!");
+});
+ 
+// login page
+router.get("/login", function (req, res) {
+    res.send("<a href='/fb/auth/facebook'>login through facebook</a>");
 });
 
 
-router.get('/users', function(req, res, next) {
+// send to facebook to do the authentication
+router.get("/auth/facebook", passport.authenticate("facebook", { scope : "email" }));
+// handle the callback after facebook has authenticated the user
+router.get("/auth/facebook/callback",
+    passport.authenticate("facebook", {
+        successRedirect : "/fb/content",
+        failureRedirect : "/fb"
+}));
 
-        var accessToken = 'EAACYjN2VuhIBAMKc2nd7a8VZA9H9zHGDbWz1ltJSGHnC9t88dRjrEvfDixjBjPh79ZBdA3fUWNblKSKc1HauRrCXGZCDvvQvLKoGaAgdBWHA7AMUPKjyZA4T6E6FfbrJGJ92ICKFFn4J7h3bUULP8xI8hsPsfenO5ZAohQeul9jiYzHwMGZCSWoBFPybDybNQZD';
 
-        console.log ('Access Token : ' + accessToken);
-        console.log ("fb users");
-        FB.setAccessToken(accessToken);
-         FB.api('me', { fields: ['id', 'name'], access_token: accessToken }, function (res) {
-            console.log(res);
-        });
-        
-
+// content page, it calls the isLoggedIn function defined above first
+// if the user is logged in, then proceed to the request handler function,
+// else the isLoggedIn will send 401 status instead
+router.get("/content", isLoggedIn, function (req, res) {
+    res.send("Congratulations! you've successfully logged in.");
 });
+ 
+// logout request handler, passport attaches a logout() function to the req object,
+// and we call this to logout the user, same as destroying the data in the session.
+router.get("/logout", function(req, res) {
+    req.logout();
+    res.send("logout success!");
+});
+
+ module.exports = router;
   
-  module.exports = router;
-  
+
