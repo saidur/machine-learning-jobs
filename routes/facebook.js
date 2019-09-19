@@ -42,10 +42,10 @@ const util = require('util');
 
     // passport needs ability to serialize and unserialize users out of session
 passport.serializeUser(function (user, done) {
-    done(null, users[1].token);
+    done(null, users[2].token);
 });
 passport.deserializeUser(function (id, done) {
-    done(null, users[1]);
+    done(null, users[2]);
 });
   
 // passport facebook strategy
