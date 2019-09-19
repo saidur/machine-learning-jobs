@@ -117,7 +117,7 @@ router.get("/content", isLoggedIn, function (req, res) {
     
     // console.log (" content users : " + users);
    // var user = findUser(req.user.id);
-    console.log (" Token  : " );
+    console.log (" user  : " );
     console.log(util.inspect(req.session.passport.user, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
