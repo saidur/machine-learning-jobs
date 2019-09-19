@@ -115,7 +115,25 @@ router.get("/auth/facebook/callback",
 // if the user is logged in, then proceed to the request handler function,
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
-    console.log (" users : " + users);
+    console.log (" content users : " + users);
+    var user = findUser(req.user.id);
+    onsole.log (" content users : " + user);
+    
+    
+    /*User.findOne({facebookID: req.user.id}, (err, user) => {
+        if (err) return;
+        FB.setAccessToken(user.accessToken);
+        FB.api('/me/accounts', (pages) => {
+            let data = pages.data.map((page) => {
+                return {
+                    name : page.name,
+                    id : page.id
+                }
+            });
+            res.json([...data]);
+        });
+    });*/
+
     res.send("Congratulations! you've successfully logged in.");
 });
  
