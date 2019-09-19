@@ -76,14 +76,7 @@ function (token, refreshToken, profile, done) {
 
 
  
-// initialize passposrt and and session for persistent login sessions
-app.use(session({
-    secret: "tHiSiSasEcRetStr",
-    resave: true,
-    saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
- 
+
  
 // route middleware to ensure user is logged in, if it's not send 401 status
 function isLoggedIn(req, res, next) {
@@ -120,12 +113,12 @@ router.get("/auth/facebook/callback",
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
    
-    var fb_access_token = req.session.access_token;
+    var accessToken = req.session.access_token;
 
     // console.log (" content users : " + users);
    // var user = findUser(req.user.id);
     //console.log (" content users : " + user);
-    console.log(util.inspect(fb_access_token, {depth: null}));
+    console.log(util.inspect(accessToken, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
         if (err) return;
