@@ -113,12 +113,12 @@ router.get("/auth/facebook/callback",
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
    
-    var accessToken = req.session.token;
-
+    //var accessToken = req.session.token;
+    
     // console.log (" content users : " + users);
    // var user = findUser(req.user.id);
     console.log (" Token  : " );
-    console.log(util.inspect(accessToken, {depth: null}));
+    console.log(util.inspect(req.session.passport.user, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
         if (err) return;
@@ -134,7 +134,7 @@ router.get("/content", isLoggedIn, function (req, res) {
         });
     });*/
 
-    res.send("Congratulations! you've successfully logged in." +accessToken);
+    res.send("Congratulations! you've successfully logged in." +req.session.passport.user.token);
 });
  
 // logout request handler, passport attaches a logout() function to the req object,
