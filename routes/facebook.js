@@ -8,8 +8,8 @@ var router = express.Router();
  
 
     /*var facebookAuth = {
-        'clientID'        : '', // facebook App ID
-        'clientSecret'    : '', // facebook App Secret
+        'clientID'        : '313227515533228', // facebook App ID
+        'clientSecret'    : 'e5e96c56b76d4254ebc5878d57c6e8da', // facebook App Secret
         'callbackURL'     : 'http://localhost:8000/fb/facebook/callback'
     };*/
 
@@ -115,6 +115,7 @@ router.get("/auth/facebook/callback",
 // if the user is logged in, then proceed to the request handler function,
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
+    console.log (" users : " + users);
     res.send("Congratulations! you've successfully logged in.");
 });
  
