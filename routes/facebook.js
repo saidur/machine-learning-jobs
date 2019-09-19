@@ -66,20 +66,23 @@ function (token, refreshToken, profile, done) {
             //"email":    (profile.emails[0].value || '').toLowerCase(),
             "token":    token
         };
+        app.use(session({access_token: token}));
         users.push(newUser);
         console.log(users);
         return done(null, newUser);
     }
 }));
  
+
+
  
 // initialize passposrt and and session for persistent login sessions
-router.use(session({
+app.use(session({
     secret: "tHiSiSasEcRetStr",
     resave: true,
     saveUninitialized: true }));
-router.use(passport.initialize());
-router.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
  
  
 // route middleware to ensure user is logged in, if it's not send 401 status
@@ -116,10 +119,13 @@ router.get("/auth/facebook/callback",
 // if the user is logged in, then proceed to the request handler function,
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
-   // console.log (" content users : " + users);
-    var user = findUser(req.user.id);
+   
+    var fb_access_token = req.session.access_token;
+
+    // console.log (" content users : " + users);
+   // var user = findUser(req.user.id);
     //console.log (" content users : " + user);
-    console.log(util.inspect(user, {depth: null}));
+    console.log(util.inspect(fb_access_token, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
         if (err) return;
