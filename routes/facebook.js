@@ -42,10 +42,10 @@ const util = require('util');
 
     // passport needs ability to serialize and unserialize users out of session
 passport.serializeUser(function (user, done) {
-    done(null, users[0].id);
+    done(null, users[1].token);
 });
 passport.deserializeUser(function (id, done) {
-    done(null, users[0]);
+    done(null, users[1]);
 });
   
 // passport facebook strategy
@@ -66,7 +66,7 @@ function (token, refreshToken, profile, done) {
             //"email":    (profile.emails[0].value || '').toLowerCase(),
             "token":    token
         };
-        app.use(session(newUser));
+        //app.use(session(newUser));
         users.push(newUser);
         console.log(users);
         return done(null, newUser);
@@ -117,7 +117,7 @@ router.get("/content", isLoggedIn, function (req, res) {
     
     // console.log (" content users : " + users);
    // var user = findUser(req.user.id);
-    console.log (" user  : " );
+    console.log (" user  details : " );
     console.log(util.inspect(req.session.passport.user, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
@@ -134,7 +134,7 @@ router.get("/content", isLoggedIn, function (req, res) {
         });
     });*/
 
-    res.send("Congratulations! you've successfully logged in." +req.session.passport.user.token);
+    res.send("Congratulations! you've successfully logged in." +req.session.passport.user.id);
 });
  
 // logout request handler, passport attaches a logout() function to the req object,
