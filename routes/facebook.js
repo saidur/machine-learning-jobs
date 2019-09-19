@@ -134,7 +134,7 @@ router.get("/content", isLoggedIn, function (req, res) {
         });
     });*/
 
-    res.send("Congratulations! you've successfully logged in.");
+    res.send("Congratulations! you've successfully logged in." +accessToken);
 });
  
 // logout request handler, passport attaches a logout() function to the req object,
