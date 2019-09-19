@@ -5,6 +5,7 @@ var express             = require('express'),
     session             = require('express-session');
 
 var router = express.Router();
+const util = require('util');
  
 
     /*var facebookAuth = {
@@ -115,10 +116,10 @@ router.get("/auth/facebook/callback",
 // if the user is logged in, then proceed to the request handler function,
 // else the isLoggedIn will send 401 status instead
 router.get("/content", isLoggedIn, function (req, res) {
-    console.log (" content users : " + users);
+   // console.log (" content users : " + users);
     var user = findUser(req.user.id);
-    console.log (" content users : " + user);
-    
+    //console.log (" content users : " + user);
+    console.log(util.inspect(user, {depth: null}));
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
         if (err) return;
