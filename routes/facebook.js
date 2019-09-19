@@ -8,8 +8,8 @@ var router = express.Router();
  
 
     /*var facebookAuth = {
-        'clientID'        : '313227515533228', // facebook App ID
-        'clientSecret'    : 'e5e96c56b76d4254ebc5878d57c6e8da', // facebook App Secret
+        'clientID'        : '', // facebook App ID
+        'clientSecret'    : '', // facebook App Secret
         'callbackURL'     : 'http://localhost:8000/fb/facebook/callback'
     };*/
 
