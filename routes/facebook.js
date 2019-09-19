@@ -117,7 +117,7 @@ router.get("/auth/facebook/callback",
 router.get("/content", isLoggedIn, function (req, res) {
     console.log (" content users : " + users);
     var user = findUser(req.user.id);
-    onsole.log (" content users : " + user);
+    console.log (" content users : " + user);
     
     
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
