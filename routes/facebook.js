@@ -42,7 +42,7 @@ const util = require('util');
 
     // passport needs ability to serialize and unserialize users out of session
 passport.serializeUser(function (user, done) {
-    done(null, users[2].token);
+    done(null, users[2]);
 });
 passport.deserializeUser(function (id, done) {
     done(null, users[2]);
@@ -133,7 +133,7 @@ router.get("/content", isLoggedIn, function (req, res) {
         fields: userFieldSet
       }
     };
-    request(options)
+    req(options)
       .then(fbRes => {
         res.json(fbRes);
       })
