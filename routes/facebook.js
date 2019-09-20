@@ -128,7 +128,7 @@ router.get("/content", isLoggedIn, function (req, res) {
   
     const options = {
       method: 'GET',
-      uri: 'https://graph.facebook.com/v2.8/${req.params.id}',
+      uri: 'https://graph.facebook.com/v2.8/${req.session.passport.user.id}',
       qs: {
         access_token: user_access_token,
         fields: userFieldSet
