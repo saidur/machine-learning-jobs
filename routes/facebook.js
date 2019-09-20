@@ -121,6 +121,9 @@ router.get("/content", isLoggedIn, function (req, res) {
     console.log (" user  details : " );
     console.log(util.inspect(req.session.passport.user, {depth: null}));
     console.log ("..id..." + req.session.passport.user.id);
+    request('https://graph.facebook.com/v3.2/{facebook_page_id}?fields=posts.limit(100){full_picture}&access_token={your_access_token}
+
+
     var user_access_token =req.session.passport.user.token;
     var user_id = req.session.passport.user.token;
 
@@ -128,7 +131,7 @@ router.get("/content", isLoggedIn, function (req, res) {
   
     const options = {
       method: 'GET',
-      uri: 'https://graph.facebook.com/v3.2/$'+req.session.passport.user.id,
+      uri: 'https://graph.facebook.com/v3.2/10153941158746887',
       qs: {
         access_token: user_access_token,
         fields: userFieldSet
