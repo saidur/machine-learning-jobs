@@ -120,6 +120,27 @@ router.get("/content", isLoggedIn, function (req, res) {
     console.log (" user  details : " );
     console.log(util.inspect(req.session.passport.user, {depth: null}));
     
+    var user_access_token =req.session.passport.user.token;
+    var user_id = req.session.passport.user.token;
+
+    const userFieldSet = 'id, name, about, email, accounts, link, is_verified, significant_other, relationship_status, website, picture, photos, feed';
+  
+    const options = {
+      method: 'GET',
+      uri: 'https://graph.facebook.com/v2.8/${req.params.id}',
+      qs: {
+        access_token: user_access_token,
+        fields: userFieldSet
+      }
+    };
+    request(options)
+      .then(fbRes => {
+        res.json(fbRes);
+      })
+    
+    
+    
+    
     /*User.findOne({facebookID: req.user.id}, (err, user) => {
         if (err) return;
         FB.setAccessToken(user.accessToken);
@@ -143,6 +164,32 @@ router.get("/logout", function(req, res) {
     req.logout();
     res.send("logout success!");
 });
+
+
+app.get('/facebook-search/:id', isLoggedIn, function (req, res) {
+
+    // you need permission for most of these fields
+    
+    var user_access_token =req.session.passport.user.token;
+    var user_id = req.session.passport.user.token;
+
+    const userFieldSet = 'id, name, about, email, accounts, link, is_verified, significant_other, relationship_status, website, picture, photos, feed';
+  
+    const options = {
+      method: 'GET',
+      uri: 'https://graph.facebook.com/v2.8/${req.params.id}',
+      qs: {
+        access_token: user_access_token,
+        fields: userFieldSet
+      }
+    };
+    request(options)
+      .then(fbRes => {
+        res.json(fbRes);
+      })
+  })
+
+
 
  module.exports = router;
   
