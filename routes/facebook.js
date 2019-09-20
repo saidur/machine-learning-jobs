@@ -121,7 +121,7 @@ router.get("/content", isLoggedIn, function (req, res) {
     console.log (" user  details : " );
     console.log(util.inspect(req.session.passport.user, {depth: null}));
     console.log ("..id..." + req.session.passport.user.id);
-    request('https://graph.facebook.com/v3.2/{facebook_page_id}?fields=posts.limit(100){full_picture}&access_token={your_access_token}
+    //request('https://graph.facebook.com/v3.2/{facebook_page_id}?fields=posts.limit(100){full_picture}&access_token={your_access_token}
 
 
     var user_access_token =req.session.passport.user.token;
