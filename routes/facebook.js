@@ -6,6 +6,7 @@ var express             = require('express'),
 
 var router = express.Router();
 const util = require('util');
+const request = require('request-promise');
  
 
     /*var facebookAuth = {
@@ -133,7 +134,7 @@ router.get("/content", isLoggedIn, function (req, res) {
         fields: userFieldSet
       }
     };
-    req(options)
+    request(options)
       .then(fbRes => {
         res.json(fbRes);
       })
